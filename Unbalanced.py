@@ -4,6 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import classification_report
 
 df=pd.read_csv('C:/Users/PREDATOR/PycharmProjects/Study/MIF/BACKSCORE_ASCORE.csv')
 df=df[df["FLAG_DATA"]!="OOT"]
@@ -64,10 +65,23 @@ y_train.value_counts()
 #oversampling smote
 smote=SMOTE(sampling_strategy='minority',k_neighbors=1) #k_neighbors nya bisa cari yg optimal pake loop
 X_train,y_train=smote.fit_resample(X_train,y_train)
+y_train.value_counts()
 
 
 #balanced on sklearn
-lr = LogisticRegression(solver='saga',max_iter=5000,class_weight='balanced')
-lr_balanced=cross_validate(lr,X_train,y_train,cv=StratifiedKFold(n_splits=5),scoring='f1') #scoring bisa liat di https://scikit-learn.org/stable/modules/model_evaluation.html#scoring-parameter
+lr = LogisticRegression(max_iter=5000,class_weight='balanced')
+#lr_balanced=cross_validate(lr,X_train,y_train,cv=StratifiedKFold(n_splits=2),scoring='f1') #scoring bisa liat di https://scikit-learn.org/stable/modules/model_evaluation.html#scoring-parameter
 print(lr_balanced['test_score'].mean())
-lr.fit(X_train,y_train)
+#lr.fit(X_train,y_train)
+pred=lr.predict(X_test)
+print(classification_report(y_test,pred))
+
+
+
+#undersampling ensemble kfold
+#train data misal goodcust ada 1000 data, badcust ada 100 data
+#ambil 100-100 goodcust, goodcust[0:100], goodcust[101:200],....
+#train data 1 = [goodcust[0:100],badcust]
+#train data 2 = [goodcust[101:200],badcust],.....
+#bikin model buat semua train
+#voting buat y_predfinal nya
