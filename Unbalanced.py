@@ -37,7 +37,7 @@ X_train,X_test,y_train,y_test=X[X["FLAG_DATA"]=="TRAINING"],X[X["FLAG_DATA"]=="V
 X_train,X_test,y_train,y_test=X_train.drop("FLAG_DATA",axis=1),X_test.drop("FLAG_DATA",axis=1),y_train.drop("FLAG_DATA",axis=1),y_test.drop("FLAG_DATA",axis=1)
 y_train.value_counts()
 
-df_train=X_train
+df_train=X_train.copy()
 df_train["FLAG_BAD"]=y_train
 
 #undersampling
