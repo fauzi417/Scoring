@@ -51,6 +51,11 @@ X_train=df_undersampling.drop("FLAG_BAD",axis=1).copy()
 y_train=df_undersampling["FLAG_BAD"].copy()
 y_train.value_counts()
 
+#undersampling cluster based prototype generation
+cc=ClusterCentroids(sampling_strategy='majority')
+X_train,y_train=cc.fit_resample(X_train,y_train)
+y_train.value_counts()
+
 
 #oversampling blind copy
 majorityclasslen=len(df_train[df_train["FLAG_BAD"]==0])
